@@ -23,6 +23,11 @@ func SaveToTxt(url string) {
 		chapters = append(chapters, chapter)
 		return nil
 	})
+	if len(bookName) == 0 {
+		fmt.Println("下载失败")
+		return
+	}
+	// 根据章节进行排序
 	sort.Slice(chapters, func(i, j int) bool {
 		return chapters[i].ID < chapters[j].ID
 	})

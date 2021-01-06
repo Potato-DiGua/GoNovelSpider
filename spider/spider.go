@@ -16,8 +16,8 @@ type OnSaveChapter func(chapter *Chapter) error
 func Crawl(chaptersUrl string, onSaveNovelInfo OnSaveNovelInfo, onSaveChapter OnSaveChapter) {
 	// Instantiate default collector
 	c := colly.NewCollector(
-		colly.AllowedDomains("www.biquge.com"), // 允许爬取的域名
-		colly.Async(true),                      // 异步模式
+		//colly.AllowedDomains("www.biqugeu.net"), // 允许爬取的域名
+		colly.Async(true), // 异步模式
 	)
 
 	var contentCollector *colly.Collector
@@ -58,15 +58,22 @@ func Crawl(chaptersUrl string, onSaveNovelInfo OnSaveNovelInfo, onSaveChapter On
 		fmt.Println("Visiting", r.URL.String())
 	})
 
+	c.OnError(func(response *colly.Response, err error) {
+		fmt.Println(err)
+	})
+
 	// Start scraping on https://hackerspaces.org
 	c.Visit(chaptersUrl)
 	c.Wait()
-	contentCollector.Wait()
+	if contentCollector != nil {
+		contentCollector.Wait()
+	}
+
 }
 
 func getContentCollector(onSaveChapter OnSaveChapter) *colly.Collector {
 	c := colly.NewCollector(
-		colly.AllowedDomains("www.biquge.com"),
+		//colly.AllowedDomains("www.biqugeu.net"),
 		colly.Async(true),
 	)
 	c.Limit(&colly.LimitRule{
